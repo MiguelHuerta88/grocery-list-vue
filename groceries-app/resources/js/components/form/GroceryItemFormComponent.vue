@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <span class="badge badge-secondary"><h3>Add/Edit Item</h3></span>
+        <span class="badge badge-secondary"><h3>Add Item</h3></span>
 
         <form @submit="submit">
             <div class="form-row">

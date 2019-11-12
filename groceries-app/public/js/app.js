@@ -293,7 +293,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     deleteItem: function deleteItem(itemId) {
       this.groceries = this.groceries.filter(function (item) {
-        console.log(item);
         return itemId !== item.id;
       });
     }
@@ -1709,7 +1708,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "badge badge-secondary" }, [
-      _c("h3", [_vm._v("Add/Edit Item")])
+      _c("h3", [_vm._v("Add Item")])
     ])
   }
 ]
