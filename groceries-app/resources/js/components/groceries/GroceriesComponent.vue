@@ -12,31 +12,18 @@
                 </tr>
             </thead>
             <tbody>
-            <GroceryComponent v-for="(groceryItem, index) in groceries" :key="index" :groceryItem="groceryItem"></GroceryComponent>
-                <!--<tr>
-                    <td>Milk</td>
-                    <td>1</td>
-                    <td>Make sure to bring 2%</td>
-                    <td><button class="btn btn-warning">Edit</button><button class="btn btn-danger">Delete</button></td>
-                </tr>
-                <tr>
-                    <td>Cheese</td>
-                    <td>2</td>
-                    <td>Make sure its the swiss Kroger Brand</td>
-                    <td><button class="btn btn-warning">Edit</button><button class="btn btn-danger">Delete</button></td>
-                </tr>
-                <tr>
-                    <td>Romaine Lettuce</td>
-                    <td>1</td>
-                    <td>3 pack</td>
-                    <td><button class="btn btn-warning">Edit</button><button class="btn btn-danger">Delete</button></td>
-                </tr>-->
+                <GroceryComponent v-for="(groceryItem, index) in groceries" :key="index" :groceryItem="groceryItem"></GroceryComponent>
             </tbody>
         </table>
+
+        <!-- form component -->
+        <GroceryItemForm></GroceryItemForm>
     </div>
 </template>
 <script>
     import GroceryComponent from "./GroceryComponent";
+    import GroceryItemForm from "../form/GroceryItemFormComponent";
+    import EventBus from '../../eventBus';
 
     export default {
         data() {
@@ -60,8 +47,19 @@
                 ]
             }
         },
+        created() {
+            EventBus.$on('newItem', item => {
+                this.addItem(item);
+            });
+        },
         components: {
-            GroceryComponent
+            GroceryComponent,
+            GroceryItemForm
+        },
+        methods: {
+            addItem(item) {
+                this.groceries.push(item);
+            }
         }
     }
 </script>
