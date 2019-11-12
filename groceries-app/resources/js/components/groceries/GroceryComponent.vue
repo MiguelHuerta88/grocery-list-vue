@@ -5,7 +5,7 @@
         <td>{{ groceryItem.notes }}</td>
         <td>
             <!--<button class="btn btn-warning" @click="editItem(groceryItem)">Edit</button>-->
-            <button class="btn btn-danger">Delete</button>
+            <button class="btn btn-danger" @click="deleteItem(groceryItem.id)">Delete</button>
         </td>
     </tr>
 </template>
@@ -14,9 +14,9 @@
     export default {
         props: ['groceryItem'],
         methods: {
-            editItem(id) {
-                // we need to tell the other component to remove the item and update the list
-                EventBus.$emit('editItem', id);
+            deleteItem(itemId) {
+                // emit the event
+                EventBus.$emit('deleteItem', itemId);
             }
         }
     }

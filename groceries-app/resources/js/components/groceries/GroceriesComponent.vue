@@ -55,8 +55,8 @@
                 this.addItem(item);
             });
 
-            EventBus.$on('editItem', item => {
-                this.editItem(item);
+            EventBus.$on('deleteItem', itemId => {
+                this.deleteItem(itemId);
             });
         },
         components: {
@@ -67,10 +67,10 @@
             addItem(item) {
                 this.groceries.push(item);
             },
-            editItem(item) {
-                // the front end is already updating since we bind the input
-
-
+            deleteItem(itemId) {
+                this.groceries = this.groceries.filter(item => {
+                    return itemId !== item.id;
+                });
             }
         }
     }

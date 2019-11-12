@@ -154,7 +154,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      isSubmit: true,
+      disable: false,
       fields: {
         id: null,
         name: null,
@@ -170,26 +170,25 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     submit: function submit(evt) {
+      // change the disable attribute to disable submit
+      this.disable = true;
       evt.preventDefault(); // try to validate
 
       this.validations = this.validateFields(this.fields); // check the validations. If we have some set we return back
 
-      if (Object.keys(this.validations).length) return;
+      if (Object.keys(this.validations).length) {
+        this.disable = false;
+        return;
+      }
 
-      if (this.isSubmit) {
-        // otherwise we add to list
-        // but the parent controls the list
-        _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('newItem', this.fields);
-      } else {
-        _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('editItem', this.fields);
-      } // clear the fields
-
+      _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('newItem', this.fields); // clear the fields
 
       this.fields = {
         name: null,
         quantity: null,
         notes: null
       };
+      this.disable = false;
     },
     validateFields: function validateFields(fields) {
       var errors = {};
@@ -203,11 +202,6 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return errors;
-    },
-    editItem: function editItem(item) {
-      // first we need to find the item and set the form values to it
-      this.fields = item;
-      this.isSubmit = false;
     }
   },
   created: function created() {
@@ -285,8 +279,8 @@ __webpack_require__.r(__webpack_exports__);
     _eventBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('newItem', function (item) {
       _this.addItem(item);
     });
-    _eventBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('editItem', function (item) {
-      _this.editItem(item);
+    _eventBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('deleteItem', function (itemId) {
+      _this.deleteItem(itemId);
     });
   },
   components: {
@@ -297,7 +291,11 @@ __webpack_require__.r(__webpack_exports__);
     addItem: function addItem(item) {
       this.groceries.push(item);
     },
-    editItem: function editItem(item) {// the front end is already updating since we bind the input
+    deleteItem: function deleteItem(itemId) {
+      this.groceries = this.groceries.filter(function (item) {
+        console.log(item);
+        return itemId !== item.id;
+      });
     }
   }
 });
@@ -329,9 +327,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['groceryItem'],
   methods: {
-    editItem: function editItem(id) {
-      // we need to tell the other component to remove the item and update the list
-      _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('editItem', id);
+    deleteItem: function deleteItem(itemId) {
+      // emit the event
+      _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('deleteItem', itemId);
     }
   }
 });
@@ -1696,7 +1694,10 @@ var render = function() {
       _vm._v(" "),
       _c(
         "button",
-        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "submit", disabled: _vm.disable }
+        },
         [_vm._v("Submit")]
       )
     ])
@@ -1807,19 +1808,23 @@ var render = function() {
     _vm._v(" "),
     _c("td", [_vm._v(_vm._s(_vm.groceryItem.notes))]),
     _vm._v(" "),
-    _vm._m(0)
+    _c("td", [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-danger",
+          on: {
+            click: function($event) {
+              return _vm.deleteItem(_vm.groceryItem.id)
+            }
+          }
+        },
+        [_vm._v("Delete")]
+      )
+    ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("button", { staticClass: "btn btn-danger" }, [_vm._v("Delete")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

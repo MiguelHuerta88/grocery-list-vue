@@ -17,7 +17,7 @@
                 <input class="form-control" type="input" name="noted" placeholder="Notes" v-model="fields.notes">
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" :disabled="disable">Submit</button>
         </form>
     </div>
 </template>
@@ -26,7 +26,7 @@
     export default {
         data() {
             return {
-                isSubmit: true,
+                disable: false,
                 fields: {
                     id: null,
                     name: null,
@@ -42,22 +42,25 @@
         },
         methods: {
             submit(evt) {
+                // change the disable attribute to disable submit
+                this.disable = true;
+
                 evt.preventDefault();
                 // try to validate
                 this.validations = this.validateFields(this.fields);
 
                 // check the validations. If we have some set we return back
-                if (Object.keys(this.validations).length) return;
-
-                if (this.isSubmit) {
-                    // otherwise we add to list
-                    // but the parent controls the list
-                    EventBus.$emit('newItem', this.fields);
-                } else {
-                    EventBus.$emit('editItem', this.fields);
+                if (Object.keys(this.validations).length) {
+                    this.disable = false;
+                    return;
                 }
+
+                EventBus.$emit('newItem', this.fields);
+
                 // clear the fields
                 this.fields = {name: null, quantity: null, notes: null};
+
+                this.disable = false;
 
             },
             validateFields(fields) {
@@ -72,11 +75,6 @@
                 }
 
                 return errors;
-            },
-            editItem(item) {
-                // first we need to find the item and set the form values to it
-                this.fields = item;
-                this.isSubmit = false;
             }
         },
         created() {
