@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <span class="badge badge-secondary"><h3>Add Item</h3></span>
+        <span class="badge badge-secondary"><h3>Add/Edit Item</h3></span>
 
         <form @submit="submit">
             <div class="form-row">
@@ -26,7 +26,9 @@
     export default {
         data() {
             return {
+                isSubmit: true,
                 fields: {
+                    id: null,
                     name: null,
                     quantity: null,
                     notes: null
@@ -47,10 +49,13 @@
                 // check the validations. If we have some set we return back
                 if (Object.keys(this.validations).length) return;
 
-                // otherwise we add to list
-                // but the parent controls the list
-                EventBus.$emit('newItem', this.fields);
-
+                if (this.isSubmit) {
+                    // otherwise we add to list
+                    // but the parent controls the list
+                    EventBus.$emit('newItem', this.fields);
+                } else {
+                    EventBus.$emit('editItem', this.fields);
+                }
                 // clear the fields
                 this.fields = {name: null, quantity: null, notes: null};
 
@@ -67,7 +72,17 @@
                 }
 
                 return errors;
+            },
+            editItem(item) {
+                // first we need to find the item and set the form values to it
+                this.fields = item;
+                this.isSubmit = false;
             }
+        },
+        created() {
+            EventBus.$on('editItem', item => {
+                this.editItem(item);
+            });
         }
 
     }

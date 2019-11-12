@@ -8,7 +8,7 @@
                     <th scope="cold">Item</th>
                     <th scope="col">Quantity</th>
                     <th scope="col">Notes</th>
-                    <th scope="col">Edit/Delete</th>
+                    <th scope="col">Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,16 +30,19 @@
             return {
                 groceries : [
                     {
+                        id: 1,
                         name: 'Milk',
                         quantity: 1,
                         notes: 'Make sure to bring 2%'
                     },
                     {
+                        id: 2,
                         name: 'Cheese',
                         quantity: 1,
                         notes: 'Kroger branch swiss'
                     },
                     {
+                        id: 3,
                         name: 'Lettuce',
                         quantity: 1,
                         notes: '3 pack'
@@ -51,6 +54,10 @@
             EventBus.$on('newItem', item => {
                 this.addItem(item);
             });
+
+            EventBus.$on('editItem', item => {
+                this.editItem(item);
+            });
         },
         components: {
             GroceryComponent,
@@ -59,6 +66,11 @@
         methods: {
             addItem(item) {
                 this.groceries.push(item);
+            },
+            editItem(item) {
+                // the front end is already updating since we bind the input
+
+
             }
         }
     }

@@ -154,7 +154,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      isSubmit: true,
       fields: {
+        id: null,
         name: null,
         quantity: null,
         notes: null
@@ -172,10 +174,16 @@ __webpack_require__.r(__webpack_exports__);
 
       this.validations = this.validateFields(this.fields); // check the validations. If we have some set we return back
 
-      if (Object.keys(this.validations).length) return; // otherwise we add to list
-      // but the parent controls the list
+      if (Object.keys(this.validations).length) return;
 
-      _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('newItem', this.fields); // clear the fields
+      if (this.isSubmit) {
+        // otherwise we add to list
+        // but the parent controls the list
+        _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('newItem', this.fields);
+      } else {
+        _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('editItem', this.fields);
+      } // clear the fields
+
 
       this.fields = {
         name: null,
@@ -195,7 +203,19 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return errors;
+    },
+    editItem: function editItem(item) {
+      // first we need to find the item and set the form values to it
+      this.fields = item;
+      this.isSubmit = false;
     }
+  },
+  created: function created() {
+    var _this = this;
+
+    _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('editItem', function (item) {
+      _this.editItem(item);
+    });
   }
 });
 
@@ -242,14 +262,17 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       groceries: [{
+        id: 1,
         name: 'Milk',
         quantity: 1,
         notes: 'Make sure to bring 2%'
       }, {
+        id: 2,
         name: 'Cheese',
         quantity: 1,
         notes: 'Kroger branch swiss'
       }, {
+        id: 3,
         name: 'Lettuce',
         quantity: 1,
         notes: '3 pack'
@@ -262,6 +285,9 @@ __webpack_require__.r(__webpack_exports__);
     _eventBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('newItem', function (item) {
       _this.addItem(item);
     });
+    _eventBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('editItem', function (item) {
+      _this.editItem(item);
+    });
   },
   components: {
     GroceryComponent: _GroceryComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -270,6 +296,8 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     addItem: function addItem(item) {
       this.groceries.push(item);
+    },
+    editItem: function editItem(item) {// the front end is already updating since we bind the input
     }
   }
 });
@@ -285,6 +313,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _eventBus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../eventBus */ "./resources/js/eventBus.js");
 //
 //
 //
@@ -293,8 +322,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['groceryItem']
+  props: ['groceryItem'],
+  methods: {
+    editItem: function editItem(id) {
+      // we need to tell the other component to remove the item and update the list
+      _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('editItem', id);
+    }
+  }
 });
 
 /***/ }),
@@ -1669,7 +1708,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "badge badge-secondary" }, [
-      _c("h3", [_vm._v("Add Item")])
+      _c("h3", [_vm._v("Add/Edit Item")])
     ])
   }
 ]
@@ -1735,7 +1774,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Notes")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Edit/Delete")])
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Delete")])
       ])
     ])
   }
@@ -1777,7 +1816,6 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("td", [
-      _c("button", { staticClass: "btn btn-warning" }, [_vm._v("Edit")]),
       _c("button", { staticClass: "btn btn-danger" }, [_vm._v("Delete")])
     ])
   }
