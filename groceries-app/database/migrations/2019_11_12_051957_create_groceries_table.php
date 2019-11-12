@@ -17,7 +17,7 @@ class CreateGroceriesTable extends Migration
             $table->increments('id');
             $table->string('name', 256);
             $table->integer('quantity');
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

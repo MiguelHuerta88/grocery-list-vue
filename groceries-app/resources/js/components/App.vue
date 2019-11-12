@@ -1,7 +1,24 @@
 <template>
-	<h2>test</h2>
+	<div class="container">
+        <div class="row">
+            <span class=" badge badge-secondary"><h2>Need Groceries?</h2></span>
+
+            <!-- first component -->
+            <GroceriesComponent></GroceriesComponent>
+        </div>
+    </div>
 </template>
 <script>
+    import GroceriesComponent from './groceries/GroceriesComponent';
 
+    export default {
+        components: {
+            GroceriesComponent
+        }
+    }
 </script>
-<style scoped></style>
+<style scoped>
+    .container {
+        margin-top: 20px;
+    }
+</style>
