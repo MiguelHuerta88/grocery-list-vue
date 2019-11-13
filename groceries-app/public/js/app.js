@@ -1930,7 +1930,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['groceryItem'],
+  //props: ['groceryItem'],
+  props: {
+    groceryItem: Object
+  },
   methods: {
     deleteItem: function deleteItem(itemId) {
       // emit the event

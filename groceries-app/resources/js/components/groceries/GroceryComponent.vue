@@ -12,7 +12,10 @@
 <script>
     import EventBus from '../../eventBus';
     export default {
-        props: ['groceryItem'],
+        //props: ['groceryItem'],
+        props: {
+            groceryItem: Object
+        },
         methods: {
             deleteItem(itemId) {
                 // emit the event
