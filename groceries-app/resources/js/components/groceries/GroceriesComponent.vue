@@ -41,10 +41,6 @@
             EventBus.$on('deleteItem', itemId => {
                 this.deleteItem(itemId);
             });
-
-            EventBus.$on('newItem', item => {
-                this.addItem(item);
-            });
         },
         components: {
             GroceryComponent,
@@ -52,8 +48,8 @@
         },
         methods: {
             ...mapGetters(['getGroceries']),
-            addItem(item) {
-                this.groceries.push(item);
+            addItem() {
+                this.groceries = this.getGroceries();
             },
             deleteItem(itemId) {
                 this.$store.dispatch('deleteGrocery', itemId).then(response => {

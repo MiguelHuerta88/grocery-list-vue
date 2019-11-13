@@ -18,6 +18,9 @@ const mutations = {
             return payload !== item.id;
         });
 		state.groceries = groceries;
+	},
+	ADD_ITEM(state, payload) {
+		state.groceries.push(payload);
 	}
 };
 
@@ -47,6 +50,13 @@ const actions = {
 				//commit('SET_PROCESSING', false);
 				resolve(true);
 			});
+		});
+	},
+	async addItem({ commit }, fields) {
+		commit('SET_PROCESSING', true);
+		await axios.post(API_URL + '/grocery/create', fields).then(response => {
+			commit('ADD_ITEM', response.data.data);
+			commit('SET_PROCESSING', false);
 		});
 	}
 };

@@ -1782,6 +1782,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     submit: function submit(evt) {
+      var _this = this;
+
       // change the disable attribute to disable submit
       this.disable = true;
       evt.preventDefault(); // try to validate
@@ -1791,16 +1793,19 @@ __webpack_require__.r(__webpack_exports__);
       if (Object.keys(this.validations).length) {
         this.disable = false;
         return;
-      }
+      } // fire the action
 
-      _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('newItem', this.fields); // clear the fields
 
-      this.fields = {
-        name: null,
-        quantity: null,
-        notes: null
-      };
-      this.disable = false;
+      this.$store.dispatch('addItem', this.fields).then(function (respose) {
+        _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('addItem'); // clear the fields
+
+        _this.fields = {
+          name: null,
+          quantity: null,
+          notes: null
+        };
+        _this.disable = false;
+      });
     },
     validateFields: function validateFields(fields) {
       var errors = {};
@@ -1815,13 +1820,6 @@ __webpack_require__.r(__webpack_exports__);
 
       return errors;
     }
-  },
-  created: function created() {
-    var _this = this;
-
-    _eventBus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('editItem', function (item) {
-      _this.editItem(item);
-    });
   }
 });
 
@@ -1888,17 +1886,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     _eventBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('deleteItem', function (itemId) {
       _this.deleteItem(itemId);
     });
-    _eventBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('newItem', function (item) {
-      _this.addItem(item);
-    });
   },
   components: {
     GroceryComponent: _GroceryComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
     GroceryItemForm: _form_GroceryItemFormComponent__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapGetters"])(['getGroceries']), {
-    addItem: function addItem(item) {
-      this.groceries.push(item);
+    addItem: function addItem() {
+      this.groceries = this.getGroceries();
     },
     deleteItem: function deleteItem(itemId) {
       var _this2 = this;
@@ -17822,6 +17817,9 @@ var mutations = {
       return payload !== item.id;
     });
     state.groceries = groceries;
+  },
+  ADD_ITEM: function ADD_ITEM(state, payload) {
+    state.groceries.push(payload);
   }
 };
 var actions = {
@@ -17864,6 +17862,27 @@ var actions = {
         //commit('SET_PROCESSING', false);
         resolve(true);
       });
+    });
+  },
+  addItem: function addItem(_ref3, fields) {
+    var commit;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.async(function addItem$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            commit = _ref3.commit;
+            commit('SET_PROCESSING', true);
+            _context2.next = 4;
+            return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.awrap(axios__WEBPACK_IMPORTED_MODULE_1___default.a.post(_config___WEBPACK_IMPORTED_MODULE_2__["API_URL"] + '/grocery/create', fields).then(function (response) {
+              commit('ADD_ITEM', response.data.data);
+              commit('SET_PROCESSING', false);
+            }));
+
+          case 4:
+          case "end":
+            return _context2.stop();
+        }
+      }
     });
   }
 };

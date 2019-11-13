@@ -55,13 +55,14 @@
                     return;
                 }
 
-                EventBus.$emit('newItem', this.fields);
+                // fire the action
+                this.$store.dispatch('addItem', this.fields).then(respose => {
+                    EventBus.$emit('addItem');
+                    // clear the fields
+                    this.fields = {name: null, quantity: null, notes: null};
 
-                // clear the fields
-                this.fields = {name: null, quantity: null, notes: null};
-
-                this.disable = false;
-
+                    this.disable = false;
+                });
             },
             validateFields(fields) {
                 const errors = {};
@@ -77,12 +78,6 @@
                 return errors;
             }
         },
-        created() {
-            EventBus.$on('editItem', item => {
-                this.editItem(item);
-            });
-        }
-
     }
 </script>
 <style scoped>
