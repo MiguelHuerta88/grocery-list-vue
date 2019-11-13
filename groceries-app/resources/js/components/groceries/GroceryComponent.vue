@@ -18,6 +18,11 @@
                 // emit the event
                 EventBus.$emit('deleteItem', itemId);
             }
+        },
+        computed: {
+            disabled() {
+                return this.disable;
+            }
         }
     }
 </script>

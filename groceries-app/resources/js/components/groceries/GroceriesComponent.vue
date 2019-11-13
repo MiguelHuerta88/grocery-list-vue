@@ -24,39 +24,26 @@
     import GroceryComponent from "./GroceryComponent";
     import GroceryItemForm from "../form/GroceryItemFormComponent";
     import EventBus from '../../eventBus';
+    import { mapGetters } from 'vuex';
 
     export default {
         data() {
             return {
-                groceries : [
-                    {
-                        id: 1,
-                        name: 'Milk',
-                        quantity: 1,
-                        notes: 'Make sure to bring 2%'
-                    },
-                    {
-                        id: 2,
-                        name: 'Cheese',
-                        quantity: 1,
-                        notes: 'Kroger branch swiss'
-                    },
-                    {
-                        id: 3,
-                        name: 'Lettuce',
-                        quantity: 1,
-                        notes: '3 pack'
-                    }
-                ]
+                groceries : null
             }
         },
         created() {
-            EventBus.$on('newItem', item => {
-                this.addItem(item);
+            // dispatch groceries action
+            this.$store.dispatch('groceries').then(() => {
+                this.groceries = this.getGroceries();
             });
 
             EventBus.$on('deleteItem', itemId => {
                 this.deleteItem(itemId);
+            });
+
+            EventBus.$on('newItem', item => {
+                this.addItem(item);
             });
         },
         components: {
@@ -64,12 +51,13 @@
             GroceryItemForm
         },
         methods: {
+            ...mapGetters(['getGroceries']),
             addItem(item) {
                 this.groceries.push(item);
             },
             deleteItem(itemId) {
-                this.groceries = this.groceries.filter(item => {
-                    return itemId !== item.id;
+                this.$store.dispatch('deleteGrocery', itemId).then(response => {
+                    this.groceries = this.getGroceries();
                 });
             }
         }

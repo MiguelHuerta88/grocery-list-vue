@@ -1,10 +1,10 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
-import groceriesModule from './groceries/groceriesModule';
+import groceriesModule from './modules/groceries/';
 
 Vue.use(Vuex);
 
-export default new Vuex.store({
+export default new Vuex.Store({
 	modules: {
 		groceriesModule
 	}
