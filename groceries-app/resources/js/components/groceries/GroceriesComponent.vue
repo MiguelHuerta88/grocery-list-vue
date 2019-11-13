@@ -41,6 +41,9 @@
             EventBus.$on('deleteItem', itemId => {
                 this.deleteItem(itemId);
             });
+            EventBus.$on('addItem', () => {
+                this.addItem();
+            });
         },
         components: {
             GroceryComponent,

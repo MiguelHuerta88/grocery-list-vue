@@ -1886,6 +1886,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     _eventBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('deleteItem', function (itemId) {
       _this.deleteItem(itemId);
     });
+    _eventBus__WEBPACK_IMPORTED_MODULE_2__["default"].$on('addItem', function () {
+      _this.addItem();
+    });
   },
   components: {
     GroceryComponent: _GroceryComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
