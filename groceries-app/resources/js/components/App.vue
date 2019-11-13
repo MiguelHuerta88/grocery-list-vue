@@ -10,7 +10,6 @@
 </template>
 <script>
     import GroceriesComponent from './groceries/GroceriesComponent';
-    import GroceryItemForm from './form/GroceryItemFormComponent';
 
     export default {
         components: {
